@@ -117,12 +117,7 @@ public class BytecodeCompiler {
         }
 
         configuration.addAll(CommonConfigurationKeys.SOURCE_ROOTS_KEY, Arrays.asList(sourceRoots));
-        for (String sourceRoot : sourceRoots) {
-            File file = new File(sourceRoot);
-            if (!file.isFile() || !"kt".equals(FileUtilRt.getExtension(file.getName()))) {
-                configuration.add(JVMConfigurationKeys.CLASSPATH_KEY, file);
-            }
-        }
+
         configuration.put(CLIConfigurationKeys.MESSAGE_COLLECTOR_KEY, MessageCollectorPlainTextToStream.PLAIN_TEXT_TO_SYSTEM_ERR);
 
         configuration.put(ENABLE_INLINE, enableInline);
