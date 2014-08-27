@@ -154,6 +154,7 @@ public class TopDownAnalysisContext implements BodiesResolveContext {
         return primaryConstructorParameterProperties;
     }
 
+    @NotNull
     @Override
     public Map<JetProperty, PropertyDescriptor> getProperties() {
         return properties;
@@ -168,6 +169,7 @@ public class TopDownAnalysisContext implements BodiesResolveContext {
         declaringScopes.put(declaration, scope);
     }
 
+    @NotNull
     @Override
     public Map<JetNamedFunction, SimpleFunctionDescriptor> getFunctions() {
         return functions;

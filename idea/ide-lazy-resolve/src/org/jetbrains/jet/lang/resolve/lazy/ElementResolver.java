@@ -505,11 +505,13 @@ public abstract class ElementResolver {
             return Collections.emptyMap();
         }
 
+        @NotNull
         @Override
         public Map<JetProperty, PropertyDescriptor> getProperties() {
             return Collections.emptyMap();
         }
 
+        @NotNull
         @Override
         public Map<JetNamedFunction, SimpleFunctionDescriptor> getFunctions() {
             return Collections.emptyMap();

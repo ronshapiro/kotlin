@@ -54,8 +54,10 @@ public interface BodiesResolveContext extends GlobalContext {
     Map<JetScript, ScriptDescriptor> getScripts();
 
     @Mutable
+    @NotNull
     Map<JetProperty, PropertyDescriptor> getProperties();
     @Mutable
+    @NotNull
     Map<JetNamedFunction, SimpleFunctionDescriptor> getFunctions();
 
     Function<JetDeclaration, JetScope> getDeclaringScopes();
