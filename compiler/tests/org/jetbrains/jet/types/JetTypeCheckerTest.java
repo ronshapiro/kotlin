@@ -579,7 +579,7 @@ public class JetTypeCheckerTest extends JetLiteFixture {
     }
 
     private WritableScope getDeclarationsScope(String path) throws IOException {
-        ModuleDescriptor moduleDescriptor = LazyResolveTestUtil.resolveEagerly(
+        ModuleDescriptor moduleDescriptor = LazyResolveTestUtil.resolve(
                 Collections.singletonList(JetTestUtils.loadJetFile(getProject(), new File(path))),
                 getEnvironment()
         );
