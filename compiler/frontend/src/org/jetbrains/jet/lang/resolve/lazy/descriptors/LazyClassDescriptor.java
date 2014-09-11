@@ -161,7 +161,7 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
         this.classObjectDescriptor = storageManager.createNullableLazyValue(new Function0<LazyClassDescriptor>() {
             @Override
             public LazyClassDescriptor invoke() {
-                return computeClassObjectDescriptor(declarationProvider.getOwnerInfo().getClassObject());
+                return computeClassObjectDescriptor(getAllowedClassObject());
             }
         });
         this.extraClassObjectDescriptors = storageManager.createMemoizedFunction(new Function1<JetClassObject, ClassDescriptor>() {
@@ -333,13 +333,15 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
     @NotNull
     @ReadOnly
     public List<ClassDescriptor> getDescriptorsForExtraClassObjects() {
+        final JetClassObject allowedClassObject = getAllowedClassObject();
+
         return KotlinPackage.map(
                 KotlinPackage.filter(
                         declarationProvider.getOwnerInfo().getClassObjects(),
                         new Function1<JetClassObject, Boolean>() {
                             @Override
                             public Boolean invoke(JetClassObject classObject) {
-                                return classObject != declarationProvider.getOwnerInfo().getClassObject();
+                                return classObject != allowedClassObject;
                             }
                         }
                 ),
@@ -364,7 +366,7 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
     @Nullable
     private JetClassLikeInfo getClassObjectInfo(@Nullable JetClassObject classObject) {
         if (classObject != null) {
-            if (getKind().isSingleton() || isInner()) {
+            if (!isClassObjectAllowed()) {
                 resolveSession.getTrace().report(CLASS_OBJECT_NOT_ALLOWED.on(classObject));
             }
 
@@ -375,6 +377,16 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
         }
 
         return null;
+    }
+
+    @Nullable
+    private JetClassObject getAllowedClassObject() {
+        JetClassObject classObject = declarationProvider.getOwnerInfo().getClassObject();
+        return (classObject != null && isClassObjectAllowed()) ? classObject : null;
+    }
+
+    private boolean isClassObjectAllowed() {
+        return !(getKind().isSingleton() || isInner());
     }
 
     @NotNull
