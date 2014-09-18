@@ -28,13 +28,11 @@ import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.openapi.project.DumbService
 import org.jetbrains.jet.plugin.util.ApplicationUtils
 import org.jetbrains.jet.lang.resolve.DelegatingBindingTrace
-import org.jetbrains.jet.di.InjectorForTopDownAnalyzerForJvm
 import org.jetbrains.jet.context.SimpleGlobalContext
 import org.jetbrains.jet.lang.resolve.TopDownAnalysisParameters
 import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.psi.util.CachedValueProvider
 import org.jetbrains.jet.asJava.LightClassUtil
-import com.intellij.openapi.roots.libraries.LibraryUtil
 import org.jetbrains.jet.lang.resolve.LibrarySourceHacks
 import org.jetbrains.jet.plugin.project.TargetPlatform
 import org.jetbrains.jet.plugin.project.ResolveSessionForBodies
@@ -58,13 +56,14 @@ import org.jetbrains.jet.lang.psi.JetClassOrObject
 import org.jetbrains.jet.lang.psi.JetCallableDeclaration
 import org.jetbrains.jet.lang.psi.JetCodeFragment
 import org.jetbrains.jet.lang.psi.JetExpression
-import org.jetbrains.jet.lang.resolve.calls.autocasts.DataFlowInfo
 import org.jetbrains.jet.analyzer.analyzeInContext
 import org.jetbrains.jet.lang.resolve.BindingTraceContext
 import org.jetbrains.jet.lang.types.TypeUtils
 import org.jetbrains.jet.lang.resolve.scopes.ChainedScope
 import org.jetbrains.jet.lang.resolve.bindingContextUtil.getDataFlowInfo
-import org.jetbrains.jet.lang.descriptors.ModuleDescriptor
+import org.jetbrains.jet.di.InjectorForLazyBodyResolve
+import org.jetbrains.jet.lang.resolve.AdditionalCheckerProvider
+import org.jetbrains.jet.plugin.project.TargetPlatformDetector
 
 public trait CacheExtension<T> {
     public val platform: TargetPlatform
@@ -240,14 +239,16 @@ private object KotlinResolveDataProvider {
             }
 
             val trace = DelegatingBindingTrace(resolveSession.getBindingContext(), "Trace for resolution of " + analyzableElement)
-            val injector = InjectorForTopDownAnalyzerForJvm(
+
+            val lazyTopDownAnalyzer = InjectorForLazyBodyResolve(
                     project,
                     SimpleGlobalContext(resolveSession.getStorageManager(), resolveSession.getExceptionTracker()),
-                    trace,
-                    resolveSession.getModuleDescriptor()
-            )
-            injector.getLazyTopDownAnalyzer()!!.analyzeDeclarations(
                     resolveSession,
+                    trace,
+                    TargetPlatformDetector.getPlatform(analyzableElement.getContainingJetFile()).getAdditionalCheckerProvider()
+            ).getLazyTopDownAnalyzer()!!
+
+            lazyTopDownAnalyzer.analyzeDeclarations(
                     TopDownAnalysisParameters.createForLazy(
                             resolveSession.getStorageManager(),
                             resolveSession.getExceptionTracker(),
