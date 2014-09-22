@@ -16,12 +16,8 @@
 
 package org.jetbrains.k2js.test.semantics;
 
-/**
- */
 public class StdLibToJSTest extends StdLibTestBase {
-
     public void testCompileJavaScriptFiles() throws Exception {
-        performStdLibTest(DEFAULT_ECMA_VERSIONS,
-                          "libraries/stdlib/src");
+        performStdLibTest(DEFAULT_ECMA_VERSIONS, "libraries/stdlib/src");
     }
 }
