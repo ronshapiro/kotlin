@@ -35,7 +35,10 @@ import org.jetbrains.jet.di.GeneratorsFileUtil;
 import org.jetbrains.jet.lang.descriptors.ClassDescriptor;
 import org.jetbrains.jet.lang.descriptors.DeclarationDescriptor;
 import org.jetbrains.jet.lang.descriptors.FunctionDescriptor;
+import org.jetbrains.jet.lang.resolve.AnalyzeSessionProvider;
+import org.jetbrains.jet.lang.resolve.BindingTraceContext;
 import org.jetbrains.jet.lang.resolve.DescriptorUtils;
+import org.jetbrains.jet.lang.resolve.java.TopDownAnalyzerFacadeForJVM;
 import org.jetbrains.jet.lang.resolve.java.mapping.JavaToKotlinClassMapBuilder;
 import org.jetbrains.jet.lang.resolve.java.structure.JavaSignatureFormatter;
 import org.jetbrains.jet.lang.resolve.java.structure.impl.JavaMethodImpl;
@@ -71,6 +74,10 @@ public class GenerateJavaToKotlinMethodMap {
         Disposable disposable = Disposer.newDisposable();
         try {
             JetCoreEnvironment coreEnvironment = JetCoreEnvironment.createForProduction(disposable, configuration);
+            AnalyzeSessionProvider.getInstance(coreEnvironment.getProject()).initialize(
+                    new BindingTraceContext(),
+                    TopDownAnalyzerFacadeForJVM.createAnalyzeModule(),
+                    null);
 
             StringBuilder buf = new StringBuilder();
             Printer printer = new Printer(buf);
