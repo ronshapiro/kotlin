@@ -83,6 +83,15 @@ public class BuiltInsReferenceResolver extends AbstractProjectComponent {
         });
     }
 
+    @Override
+    public void disposeComponent() {
+        System.out.println("Disposed BuiltInsReferenceResolver");
+        bindingContext = null;
+        builtInsSources = null;
+        builtinsPackageFragment = null;
+        super.disposeComponent();
+    }
+
     @TestOnly
     public Set<JetFile> getBuiltInsSources() {
         return builtInsSources;
