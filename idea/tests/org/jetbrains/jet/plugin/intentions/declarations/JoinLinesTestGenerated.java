@@ -17,13 +17,10 @@
 package org.jetbrains.jet.plugin.intentions.declarations;
 
 import com.intellij.testFramework.TestDataPath;
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import org.junit.runner.RunWith;
 import org.jetbrains.jet.JetTestUtils;
 import org.jetbrains.jet.test.InnerTestClasses;
 import org.jetbrains.jet.test.TestMetadata;
-import org.jetbrains.jet.JUnit3RunnerWithInners;
+import org.junit.runner.RunWith;
 
 import java.io.File;
 import java.util.regex.Pattern;
@@ -45,6 +42,18 @@ public class JoinLinesTestGenerated extends AbstractJoinLinesTest {
     public static class DeclarationAndAssignment extends AbstractJoinLinesTest {
         public void testAllFilesPresentInDeclarationAndAssignment() throws Exception {
             JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("idea/testData/joinLines/declarationAndAssignment"), Pattern.compile("^(.+)\\.kt$"), true);
+        }
+        
+        @TestMetadata("blankLineBetween.kt")
+        public void testBlankLineBetween() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("idea/testData/joinLines/declarationAndAssignment/blankLineBetween.kt");
+            doTest(fileName);
+        }
+        
+        @TestMetadata("commentBetween.kt")
+        public void testCommentBetween() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("idea/testData/joinLines/declarationAndAssignment/commentBetween.kt");
+            doTest(fileName);
         }
         
         @TestMetadata("longInit.kt")
