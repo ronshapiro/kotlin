@@ -9386,6 +9386,12 @@ public class JetDiagnosticsTestGenerated extends AbstractJetDiagnosticsTest {
                 doTest(fileName);
             }
             
+            @TestMetadata("kt5455.kt")
+            public void testKt5455() throws Exception {
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/smartCasts/kt5455.kt");
+                doTest(fileName);
+            }
+            
             @TestMetadata("noErrorCheckForPackageLevelVal.kt")
             public void testNoErrorCheckForPackageLevelVal() throws Exception {
                 String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/smartCasts/noErrorCheckForPackageLevelVal.kt");
