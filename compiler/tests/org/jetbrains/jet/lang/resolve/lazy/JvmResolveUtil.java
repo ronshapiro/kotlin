@@ -26,6 +26,7 @@ import org.jetbrains.jet.cli.jvm.compiler.CliLightClassGenerationSupport;
 import org.jetbrains.jet.lang.descriptors.impl.ModuleDescriptorImpl;
 import org.jetbrains.jet.lang.psi.JetFile;
 import org.jetbrains.jet.lang.resolve.AnalyzingUtils;
+import org.jetbrains.jet.lang.resolve.BindingTrace;
 import org.jetbrains.jet.lang.resolve.BindingTraceContext;
 import org.jetbrains.jet.lang.resolve.java.TopDownAnalyzerFacadeForJVM;
 import org.jetbrains.jet.lang.types.lang.KotlinBuiltIns;
@@ -74,8 +75,16 @@ public class JvmResolveUtil {
             @NotNull Collection<JetFile> files,
             @NotNull Predicate<PsiFile> filesToAnalyzeCompletely
     ) {
-        BindingTraceContext bindingTraceContext = new BindingTraceContext();
+        return analyzeFilesWithJavaIntegration(project, new BindingTraceContext(), files, filesToAnalyzeCompletely);
+    }
 
+    @NotNull
+    public static AnalyzeExhaust analyzeFilesWithJavaIntegration(
+            @NotNull Project project,
+            @NotNull BindingTrace bindingTrace,
+            @NotNull Collection<JetFile> files,
+            @NotNull Predicate<PsiFile> filesToAnalyzeCompletely
+    ) {
         ModuleDescriptorImpl module = TopDownAnalyzerFacadeForJVM.createJavaModule("<module>");
         module.addDependencyOnModule(module);
         module.addDependencyOnModule(KotlinBuiltIns.getInstance().getBuiltInsModule());
@@ -84,7 +93,7 @@ public class JvmResolveUtil {
         if (lightClassGenerationSupport != null) {
             lightClassGenerationSupport.setModule(module);
         }
-        return TopDownAnalyzerFacadeForJVM.analyzeFilesWithJavaIntegration(project, files, bindingTraceContext, filesToAnalyzeCompletely,
+        return TopDownAnalyzerFacadeForJVM.analyzeFilesWithJavaIntegration(project, files, bindingTrace, filesToAnalyzeCompletely,
                                                                            module, null, null);
     }
 }

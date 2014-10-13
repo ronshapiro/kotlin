@@ -71,6 +71,7 @@ public class BindingTraceContext implements BindingTrace {
     }
 
     @TestOnly
+    @NotNull
     public static BindingTraceContext createTraceableBindingTrace() {
         return new BindingTraceContext(new TrackingSlicedMap(TRACK_WITH_STACK_TRACES));
     }

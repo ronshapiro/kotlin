@@ -127,6 +127,7 @@ import org.jetbrains.jet.generators.tests.reservedWords.generateTestDataForReser
 import org.jetbrains.k2js.test.semantics.AbstractReservedWordTest
 import org.jetbrains.jet.resolve.AbstractReferenceResolveInJavaTest
 import org.jetbrains.k2js.test.semantics.AbstractBridgeTest
+import org.jetbrains.jet.types.AbstractJetTypeBindingTest
 
 fun main(args: Array<String>) {
     System.setProperty("java.awt.headless", "true")
@@ -290,6 +291,10 @@ fun main(args: Array<String>) {
 
         testClass(javaClass<AbstractKotlinLightClassTest>()) {
             model("asJava/lightClasses")
+        }
+
+        testClass(javaClass<AbstractJetTypeBindingTest>()) {
+            model("type/binding")
         }
     }
 
