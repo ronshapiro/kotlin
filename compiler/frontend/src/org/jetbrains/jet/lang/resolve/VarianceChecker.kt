@@ -37,71 +37,99 @@ import org.jetbrains.jet.lang.psi.JetClass
 import org.jetbrains.jet.lang.psi.JetTypeReference
 import org.jetbrains.jet.lang.types.Variance.*
 import org.jetbrains.jet.lang.diagnostics.DiagnosticSink
+import org.jetbrains.jet.lang.descriptors.CallableMemberDescriptor
+import org.jetbrains.jet.lang.descriptors.impl.FunctionDescriptorImpl
+import org.jetbrains.jet.lang.descriptors.impl.PropertyDescriptorImpl
+import org.jetbrains.jet.lang.descriptors.impl.PropertyAccessorDescriptorImpl
+import org.jetbrains.jet.lang.resolve.source.getPsi
+import org.jetbrains.jet.lang.descriptors.VariableDescriptor
 
 
 class VarianceChecker(private val trace: BindingTrace) {
 
     fun process(c: TopDownAnalysisContext) {
+        for (member in c.getMembers().values()) recordPrivateToThisIfNeeded(trace, member)
+
         check(c)
     }
 
     fun check(c: TopDownAnalysisContext) {
-        checkFunctions(c)
-        checkProperties(c)
+        checkMembers(c)
         checkClasses(c)
     }
 
     private fun checkClasses(c: TopDownAnalysisContext) {
         for (jetClassOrObject in c.getDeclaredClasses()!!.keySet()) {
-            if (jetClassOrObject is JetClass)
-                checkClass(jetClassOrObject)
-        }
-    }
-
-    private fun checkClass(jetClass: JetClass) {
-        for (specifier in jetClass.getDelegationSpecifiers()) {
-            specifier.getTypeReference()?.checkTypePosition(trace, OUT_VARIANCE, trace)
-        }
-    }
-
-    private fun checkFunctions(c: TopDownAnalysisContext) {
-        for ((declaration, descriptor) in c.getFunctions().entrySet()) {
-            checkCallableDeclaration(declaration, descriptor, OUT_VARIANCE)
-        }
-    }
-
-    private fun checkProperties(c: TopDownAnalysisContext) {
-        for ((declaration, descriptor) in c.getProperties().entrySet()) {
-            checkCallableDeclaration(declaration, descriptor, if (descriptor.isVar()) INVARIANT else OUT_VARIANCE)
-        }
-    }
-    
-    private fun checkCallableDeclaration(declaration: JetCallableDeclaration, descriptor: CallableDescriptor, returnTypePosition: Variance) {
-        if (descriptor.getContainingDeclaration() !is ClassDescriptor) return
-
-        val diagnosticSink = PrivateToThisDiagnosticSink(descriptor, trace)
-        declaration.checkReceiver(trace, diagnosticSink)
-        declaration.checkReturnType(trace, returnTypePosition, diagnosticSink)
-        declaration.checkTypeParameters(trace, diagnosticSink)
-
-        val jetParameterList = declaration.getValueParameterList()
-        if (jetParameterList != null) {
-            for (parameter in jetParameterList.getParameters()) {
-                parameter.getTypeReference()?.checkTypePosition(trace, IN_VARIANCE, diagnosticSink)
+            if (jetClassOrObject is JetClass) {
+                for (specifier in jetClassOrObject.getDelegationSpecifiers()) {
+                    specifier.getTypeReference()?.checkTypePosition(trace, OUT_VARIANCE, trace)
+                }
             }
         }
-        //todo diagnosticSink.privateToThis
     }
 
-    private class PrivateToThisDiagnosticSink(
-            private val descriptor: CallableDescriptor,
-            private val trace: BindingTrace
-    ): DiagnosticSink {
-        var privateToThis = false
+    private fun checkMembers(c: TopDownAnalysisContext) {
+        for ((declaration, descriptor) in c.getMembers()) {
+            if (!Visibilities.isPrivate(descriptor.getVisibility())) {
+                checkCallableDeclaration(trace, declaration, descriptor, trace)
+            }
+        }
+    }
 
-        override fun report(diagnostic: Diagnostic): Unit
-                = if (descriptor.getVisibility() != Visibilities.PRIVATE) trace.report(diagnostic)
-                    else privateToThis = true
+    class object {
+        fun recordPrivateToThisIfNeeded(trace: BindingTrace, descriptor: CallableMemberDescriptor) {
+            if (descriptor.getVisibility() != Visibilities.PRIVATE) return
+
+            val psiElement = descriptor.getSource().getPsi()
+            if (psiElement !is JetCallableDeclaration) return;
+
+            val sink = PrivateToThisDiagnosticSink()
+            checkCallableDeclaration(trace, psiElement, descriptor, sink)
+
+            if (sink.privateToThis) recordPrivateToThis(descriptor)
+        }
+
+        private fun checkCallableDeclaration(trace: BindingTrace,
+                                             declaration: JetCallableDeclaration,
+                                             descriptor: CallableDescriptor,
+                                             diagnosticHolder: DiagnosticSink) {
+            if (descriptor.getContainingDeclaration() !is ClassDescriptor) return
+
+            val returnTypePosition = if (descriptor is VariableDescriptor && descriptor.isVar()) INVARIANT else OUT_VARIANCE
+
+            declaration.checkReceiver(trace, diagnosticHolder)
+            declaration.checkReturnType(trace, returnTypePosition, diagnosticHolder)
+            declaration.checkTypeParameters(trace, diagnosticHolder)
+
+            val jetParameterList = declaration.getValueParameterList()
+            if (jetParameterList != null) {
+                for (parameter in jetParameterList.getParameters()) {
+                    parameter.getTypeReference()?.checkTypePosition(trace, IN_VARIANCE, diagnosticHolder)
+                }
+            }
+        }
+
+        private fun recordPrivateToThis(descriptor: CallableDescriptor) {
+            if (descriptor is FunctionDescriptorImpl) {
+                descriptor.setVisibility(Visibilities.PRIVATE_TO_THIS);
+            }
+            else if (descriptor is PropertyDescriptorImpl) {
+                descriptor.setVisibility(Visibilities.PRIVATE_TO_THIS);
+                for (accessor in descriptor.getAccessors()) {
+                    (accessor as PropertyAccessorDescriptorImpl).setVisibility(Visibilities.PRIVATE_TO_THIS)
+                }
+            } else {
+                throw IllegalStateException("Unexpected descriptor type: ${descriptor.javaClass.getName()}")
+            }
+        }
+
+        private class PrivateToThisDiagnosticSink: DiagnosticSink {
+            var privateToThis = false
+
+            override fun report(diagnostic: Diagnostic): Unit {
+                privateToThis = true
+            }
+        }
     }
 }
 
