@@ -181,7 +181,7 @@ public class KotlinCacheService(val project: Project) {
         if (elements.isEmpty()) return AnalyzeExhaust.EMPTY
 
         val firstFile = elements.first().getContainingJetFile()
-        if (elements.size == 1 && (!ProjectRootsUtil.isInProjectSource(firstFile) && firstFile !is JetCodeFragment)) {
+        if (elements.size == 1 && !firstFile.getModuleInfo().isContent()) {
             return getCacheForSyntheticFile(firstFile).getAnalysisResultsForElements(elements)
         }
 
@@ -191,4 +191,8 @@ public class KotlinCacheService(val project: Project) {
     public fun <T> get(extension: CacheExtension<T>): T {
         return getGlobalCache(extension.platform)[extension]
     }
+}
+
+private fun IdeaModuleInfo.isContent(): Boolean {
+    return this is ModuleSourceInfo || this.isLibraryClasses()
 }
