@@ -186,7 +186,7 @@ public class JvmCodegenUtil {
         if (accessor.hasBody()) return false;
 
         // If the accessor is private or final, it can't be overridden in the subclass and thus we can use direct access
-        return property.getVisibility() == Visibilities.PRIVATE || accessor.getModality() == FINAL;
+        return Visibilities.isPrivate(property.getVisibility()) || accessor.getModality() == FINAL;
     }
 
     private static boolean isDebuggerContext(@NotNull MethodContext context) {

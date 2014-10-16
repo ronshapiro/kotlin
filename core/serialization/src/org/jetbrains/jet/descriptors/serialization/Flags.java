@@ -145,7 +145,7 @@ public class Flags {
         else if (visibility == Visibilities.PUBLIC) {
             return ProtoBuf.Visibility.PUBLIC;
         }
-        else if (visibility == Visibilities.PRIVATE) {
+        else if (Visibilities.isPrivate(visibility)) {
             return ProtoBuf.Visibility.PRIVATE;
         }
         else if (visibility == Visibilities.PROTECTED) {
