@@ -360,7 +360,9 @@ public class TaskPrioritizer {
             if (call == null) return false;
             D candidateDescriptor = call.getDescriptor();
             if (ErrorUtils.isError(candidateDescriptor)) return true;
-            return Visibilities.isVisible(candidateDescriptor, context.scope.getContainingDeclaration());
+            ReceiverValue receiverValue = ExpressionTypingUtils
+                    .normalizeReceiverValueForVisibility(call.getDispatchReceiver(), context.trace.getBindingContext());
+            return Visibilities.isVisible(receiverValue, candidateDescriptor, context.scope.getContainingDeclaration());
         }
 
         private boolean isSynthesized(ResolutionCandidate<D> call) {
