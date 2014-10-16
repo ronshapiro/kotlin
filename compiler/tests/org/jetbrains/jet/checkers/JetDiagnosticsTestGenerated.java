@@ -1276,6 +1276,12 @@ public class JetDiagnosticsTestGenerated extends AbstractJetDiagnosticsTest {
                     JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/diagnostics/tests/cast/neverSucceeds"), Pattern.compile("^(.+)\\.kt$"), true);
                 }
                 
+                @TestMetadata("CastToNotNullSuper.kt")
+                public void testCastToNotNullSuper() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/cast/neverSucceeds/CastToNotNullSuper.kt");
+                    doTest(fileName);
+                }
+                
                 @TestMetadata("MappedDirect.kt")
                 public void testMappedDirect() throws Exception {
                     String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/cast/neverSucceeds/MappedDirect.kt");
