@@ -17,9 +17,13 @@
 package org.jetbrains.jet.completion;
 
 import com.intellij.testFramework.TestDataPath;
-import org.jetbrains.jet.JetTestUtils;
-import org.jetbrains.jet.test.TestMetadata;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 import org.junit.runner.RunWith;
+import org.jetbrains.jet.JetTestUtils;
+import org.jetbrains.jet.test.InnerTestClasses;
+import org.jetbrains.jet.test.TestMetadata;
+import org.jetbrains.jet.JUnit3RunnerWithInners;
 
 import java.io.File;
 import java.util.regex.Pattern;
@@ -193,6 +197,24 @@ public class JvmSmartCompletionTestGenerated extends AbstractJvmSmartCompletionT
     @TestMetadata("FunctionReference1.kt")
     public void testFunctionReference1() throws Exception {
         String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/smart/FunctionReference1.kt");
+        doTest(fileName);
+    }
+    
+    @TestMetadata("FunctionReference10.kt")
+    public void testFunctionReference10() throws Exception {
+        String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/smart/FunctionReference10.kt");
+        doTest(fileName);
+    }
+    
+    @TestMetadata("FunctionReference11.kt")
+    public void testFunctionReference11() throws Exception {
+        String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/smart/FunctionReference11.kt");
+        doTest(fileName);
+    }
+    
+    @TestMetadata("FunctionReference12.kt")
+    public void testFunctionReference12() throws Exception {
+        String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/smart/FunctionReference12.kt");
         doTest(fileName);
     }
     
