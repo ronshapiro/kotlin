@@ -534,6 +534,12 @@ public class JSBasicCompletionTestGenerated extends AbstractJSBasicCompletionTes
             doTest(fileName);
         }
         
+        @TestMetadata("NoPackageFacadeClasses.kt")
+        public void testNoPackageFacadeClasses() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/basic/common/NoPackageFacadeClasses.kt");
+            doTest(fileName);
+        }
+        
         @TestMetadata("NoSecondPressCompletionInAutoPopup.kt")
         public void testNoSecondPressCompletionInAutoPopup() throws Exception {
             String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/basic/common/NoSecondPressCompletionInAutoPopup.kt");
