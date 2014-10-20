@@ -50,6 +50,12 @@ public class SmartCompletionWeigherTestGenerated extends AbstractSmartCompletion
         doTest(fileName);
     }
     
+    @TestMetadata("It.kt")
+    public void testIt() throws Exception {
+        String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/weighers/smart/It.kt");
+        doTest(fileName);
+    }
+    
     @TestMetadata("MultipleArgsItem.kt")
     public void testMultipleArgsItem() throws Exception {
         String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/weighers/smart/MultipleArgsItem.kt");
