@@ -17,9 +17,13 @@
 package org.jetbrains.jet.completion.weighers;
 
 import com.intellij.testFramework.TestDataPath;
-import org.jetbrains.jet.JetTestUtils;
-import org.jetbrains.jet.test.TestMetadata;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 import org.junit.runner.RunWith;
+import org.jetbrains.jet.JetTestUtils;
+import org.jetbrains.jet.test.InnerTestClasses;
+import org.jetbrains.jet.test.TestMetadata;
+import org.jetbrains.jet.JUnit3RunnerWithInners;
 
 import java.io.File;
 import java.util.regex.Pattern;
@@ -32,6 +36,12 @@ import java.util.regex.Pattern;
 public class SmartCompletionWeigherTestGenerated extends AbstractSmartCompletionWeigherTest {
     public void testAllFilesPresentInSmart() throws Exception {
         JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("idea/testData/completion/weighers/smart"), Pattern.compile("^([^\\.]+)\\.kt$"), true);
+    }
+    
+    @TestMetadata("FunctionExpected.kt")
+    public void testFunctionExpected() throws Exception {
+        String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/weighers/smart/FunctionExpected.kt");
+        doTest(fileName);
     }
     
     @TestMetadata("MultipleArgsItem.kt")
