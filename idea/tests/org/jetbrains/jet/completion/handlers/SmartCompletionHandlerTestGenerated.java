@@ -454,6 +454,12 @@ public class SmartCompletionHandlerTestGenerated extends AbstractSmartCompletion
         doTest(fileName);
     }
     
+    @TestMetadata("MultipleArgsItemByTab.kt")
+    public void testMultipleArgsItemByTab() throws Exception {
+        String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/handlers/smart/MultipleArgsItemByTab.kt");
+        doTest(fileName);
+    }
+    
     @TestMetadata("NestedDataClass.kt")
     public void testNestedDataClass() throws Exception {
         String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/handlers/smart/NestedDataClass.kt");
