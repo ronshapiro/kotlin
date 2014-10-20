@@ -113,7 +113,7 @@ import org.jetbrains.jet.plugin.stubs.AbstractLazyResolveByStubTest
 import org.jetbrains.jet.plugin.stubs.AbstractMultiFileHighlightingTest
 import org.jetbrains.jet.cfg.AbstractPseudoValueTest
 import org.jetbrains.jet.plugin.structureView.AbstractKotlinFileStructureTest
-import org.jetbrains.jet.j2k.test.AbstractJavaToKotlinConverterTest
+import org.jetbrains.jet.j2k.test.AbstractJavaToKotlinConverterSingleFileTest
 import org.jetbrains.jet.jps.build.AbstractIncrementalJpsTest
 import org.jetbrains.jet.asJava.AbstractKotlinLightClassTest
 import org.jetbrains.jet.lang.resolve.java.AbstractJavaTypeSubstitutorTest
@@ -127,6 +127,7 @@ import org.jetbrains.jet.generators.tests.reservedWords.generateTestDataForReser
 import org.jetbrains.k2js.test.semantics.AbstractReservedWordTest
 import org.jetbrains.jet.resolve.AbstractReferenceResolveInJavaTest
 import org.jetbrains.k2js.test.semantics.AbstractBridgeTest
+import org.jetbrains.jet.j2k.test.AbstractJavaToKotlinConverterMultiFileTest
 
 fun main(args: Array<String>) {
     System.setProperty("java.awt.headless", "true")
@@ -627,8 +628,13 @@ fun main(args: Array<String>) {
     }
 
     testGroup("j2k/tests/test", "j2k/tests/testData") {
-        testClass(javaClass<AbstractJavaToKotlinConverterTest>()) {
-            model("ast", extension = "java")
+        testClass(javaClass<AbstractJavaToKotlinConverterSingleFileTest>()) {
+            model("fileOrElement", extension = "java")
+        }
+    }
+    testGroup("j2k/tests/test", "j2k/tests/testData") {
+        testClass(javaClass<AbstractJavaToKotlinConverterMultiFileTest>()) {
+            model("multiFile", extension = null)
         }
     }
 
