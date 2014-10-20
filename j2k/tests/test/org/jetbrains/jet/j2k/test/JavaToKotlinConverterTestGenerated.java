@@ -17,13 +17,10 @@
 package org.jetbrains.jet.j2k.test;
 
 import com.intellij.testFramework.TestDataPath;
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import org.junit.runner.RunWith;
 import org.jetbrains.jet.JetTestUtils;
 import org.jetbrains.jet.test.InnerTestClasses;
 import org.jetbrains.jet.test.TestMetadata;
-import org.jetbrains.jet.JUnit3RunnerWithInners;
+import org.junit.runner.RunWith;
 
 import java.io.File;
 import java.util.regex.Pattern;
@@ -1408,6 +1405,12 @@ public class JavaToKotlinConverterTestGenerated extends AbstractJavaToKotlinConv
         @TestMetadata("GetterAndSetterNamesDifferent.java")
         public void testGetterAndSetterNamesDifferent() throws Exception {
             String fileName = JetTestUtils.navigationMetadata("j2k/tests/testData/ast/dropAccessors/GetterAndSetterNamesDifferent.java");
+            doTest(fileName);
+        }
+        
+        @TestMetadata("GetterSetterUsages.java")
+        public void testGetterSetterUsages() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("j2k/tests/testData/ast/dropAccessors/GetterSetterUsages.java");
             doTest(fileName);
         }
         
