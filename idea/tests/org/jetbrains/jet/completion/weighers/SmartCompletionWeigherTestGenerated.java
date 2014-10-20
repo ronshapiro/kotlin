@@ -176,6 +176,12 @@ public class SmartCompletionWeigherTestGenerated extends AbstractSmartCompletion
         doTest(fileName);
     }
     
+    @TestMetadata("NullableExpected.kt")
+    public void testNullableExpected() throws Exception {
+        String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/weighers/smart/NullableExpected.kt");
+        doTest(fileName);
+    }
+    
     @TestMetadata("SmartPriority.kt")
     public void testSmartPriority() throws Exception {
         String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/weighers/smart/SmartPriority.kt");
