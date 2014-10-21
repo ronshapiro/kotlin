@@ -17,10 +17,13 @@
 package org.jetbrains.jet.completion;
 
 import com.intellij.testFramework.TestDataPath;
+import junit.framework.Test;
+import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
 import org.jetbrains.jet.JetTestUtils;
 import org.jetbrains.jet.test.InnerTestClasses;
 import org.jetbrains.jet.test.TestMetadata;
-import org.junit.runner.RunWith;
+import org.jetbrains.jet.JUnit3RunnerWithInners;
 
 import java.io.File;
 import java.util.regex.Pattern;
@@ -192,6 +195,72 @@ public class JvmBasicCompletionTestGenerated extends AbstractJvmBasicCompletionT
         @TestMetadata("FunctionCompletionFormatting.kt")
         public void testFunctionCompletionFormatting() throws Exception {
             String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/basic/common/FunctionCompletionFormatting.kt");
+            doTest(fileName);
+        }
+        
+        @TestMetadata("FunctionLiteralParameterName0.kt")
+        public void testFunctionLiteralParameterName0() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/basic/common/FunctionLiteralParameterName0.kt");
+            doTest(fileName);
+        }
+        
+        @TestMetadata("FunctionLiteralParameterName1.kt")
+        public void testFunctionLiteralParameterName1() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/basic/common/FunctionLiteralParameterName1.kt");
+            doTest(fileName);
+        }
+        
+        @TestMetadata("FunctionLiteralParameterName2.kt")
+        public void testFunctionLiteralParameterName2() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/basic/common/FunctionLiteralParameterName2.kt");
+            doTest(fileName);
+        }
+        
+        @TestMetadata("FunctionLiteralParameterName3.kt")
+        public void testFunctionLiteralParameterName3() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/basic/common/FunctionLiteralParameterName3.kt");
+            doTest(fileName);
+        }
+        
+        @TestMetadata("FunctionLiteralParameterName4.kt")
+        public void testFunctionLiteralParameterName4() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/basic/common/FunctionLiteralParameterName4.kt");
+            doTest(fileName);
+        }
+        
+        @TestMetadata("FunctionLiteralParameterName5.kt")
+        public void testFunctionLiteralParameterName5() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/basic/common/FunctionLiteralParameterName5.kt");
+            doTest(fileName);
+        }
+        
+        @TestMetadata("FunctionLiteralParameterType1.kt")
+        public void testFunctionLiteralParameterType1() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/basic/common/FunctionLiteralParameterType1.kt");
+            doTest(fileName);
+        }
+        
+        @TestMetadata("FunctionLiteralParameterType2.kt")
+        public void testFunctionLiteralParameterType2() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/basic/common/FunctionLiteralParameterType2.kt");
+            doTest(fileName);
+        }
+        
+        @TestMetadata("FunctionLiteralParameterType3.kt")
+        public void testFunctionLiteralParameterType3() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/basic/common/FunctionLiteralParameterType3.kt");
+            doTest(fileName);
+        }
+        
+        @TestMetadata("FunctionLiteralParameterType4.kt")
+        public void testFunctionLiteralParameterType4() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/basic/common/FunctionLiteralParameterType4.kt");
+            doTest(fileName);
+        }
+        
+        @TestMetadata("FunctionLiteralParameterType5.kt")
+        public void testFunctionLiteralParameterType5() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("idea/testData/completion/basic/common/FunctionLiteralParameterType5.kt");
             doTest(fileName);
         }
         
