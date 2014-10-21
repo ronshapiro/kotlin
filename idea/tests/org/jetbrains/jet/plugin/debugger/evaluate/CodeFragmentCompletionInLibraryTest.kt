@@ -53,9 +53,9 @@ public class CodeFragmentCompletionInLibraryTest : AbstractJvmBasicCompletionTes
     public fun testCompletionInCustomLibrary() {
         val sourceFile = findLibrarySourceDir().findChild("customLibrary.kt")
         val jetFile = PsiManager.getInstance(getProject()).findFile(sourceFile) as JetFile
-        val fooFunctionFromLibrary = jetFile.getDeclarations()[0] as JetFunction
+        val fooFunctionFromLibrary = jetFile.getDeclarations().first() as JetFunction
         val codeFragment = JetPsiFactory(fooFunctionFromLibrary).createExpressionCodeFragment(
-                "thisTextDoesNotMatter",
+                "<caret>",
                 KotlinCodeFragmentFactory.getContextElement(fooFunctionFromLibrary.getBodyExpression())
         )
         myFixture.configureFromExistingVirtualFile(codeFragment.getVirtualFile())
