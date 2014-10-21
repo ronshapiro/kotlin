@@ -63,7 +63,8 @@ abstract class CompletionSessionBase(protected val configuration: CompletionSess
 
     protected val project: Project = position.getProject()
     protected val indicesHelper: KotlinIndicesHelper = KotlinIndicesHelper(project)
-    protected val searchScope: GlobalSearchScope = searchScopeForSourceElementDependencies(parameters.getOriginalFile()) ?: GlobalSearchScope.EMPTY_SCOPE
+    protected val searchScope: GlobalSearchScope = searchScopeForSourceElementDependencies(parameters.getOriginalFile())
+                                                   ?: parameters.getOriginalFile().getResolveScope()
 
     protected fun isVisibleDescriptor(descriptor: DeclarationDescriptor): Boolean {
         if (configuration.completeNonAccessibleDeclarations) return true
