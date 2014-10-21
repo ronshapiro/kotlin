@@ -48,6 +48,7 @@ import org.jetbrains.jet.lang.psi.psiUtil.parents
 import com.intellij.openapi.project.Project
 import org.jetbrains.jet.lang.psi.psiUtil.getQualifiedElement
 import org.jetbrains.jet.lang.types.JetType
+import org.jetbrains.jet.lang.resolve.descriptorUtil.getImportableDescriptor
 
 public object ShortenReferences {
     public fun process(element: JetElement) {
@@ -317,11 +318,8 @@ public object ShortenReferences {
             = DescriptorRenderer.FQ_NAMES_IN_TYPES.render(this)
 
     private fun JetReferenceExpression.getTargets(context: BindingContext): Collection<DeclarationDescriptor> {
-        fun adjustDescriptor(it: DeclarationDescriptor): DeclarationDescriptor =
-                (it as? ConstructorDescriptor)?.getContainingDeclaration() ?: it
-
-        return context[BindingContext.REFERENCE_TARGET, this]?.let { Collections.singletonList(adjustDescriptor(it)) }
-               ?: context[BindingContext.AMBIGUOUS_REFERENCE_TARGET, this]?.mapTo(HashSet<DeclarationDescriptor>()) { adjustDescriptor(it) }
+        return context[BindingContext.REFERENCE_TARGET, this]?.let { Collections.singletonList(it.getImportableDescriptor()) }
+               ?: context[BindingContext.AMBIGUOUS_REFERENCE_TARGET, this]?.mapTo(HashSet<DeclarationDescriptor>()) { it.getImportableDescriptor() }
                ?: Collections.emptyList()
     }
 
