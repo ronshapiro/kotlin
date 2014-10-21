@@ -18,6 +18,9 @@ package org.jetbrains.jet.codegen.intrinsics;
 
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.jet.lang.descriptors.DeclarationDescriptor;
+import org.jetbrains.jet.lang.descriptors.VariableDescriptor;
+import org.jetbrains.jet.lang.types.lang.KotlinBuiltIns;
 import org.jetbrains.org.objectweb.asm.Type;
 import org.jetbrains.org.objectweb.asm.commons.InstructionAdapter;
 import org.jetbrains.jet.codegen.ExpressionCodegen;
@@ -30,6 +33,7 @@ import java.util.List;
 
 import static org.jetbrains.jet.codegen.AsmUtil.genIncrement;
 import static org.jetbrains.jet.codegen.AsmUtil.isPrimitive;
+import static org.jetbrains.jet.lang.resolve.BindingContext.REFERENCE_TARGET;
 
 public class Increment extends IntrinsicMethod {
     private final int myDelta;
@@ -56,10 +60,17 @@ public class Increment extends IntrinsicMethod {
                 operand = ((JetParenthesizedExpression) operand).getExpression();
             }
             if (operand instanceof JetReferenceExpression && returnType == Type.INT_TYPE) {
-                int index = codegen.indexOfLocal((JetReferenceExpression) operand);
+                JetReferenceExpression referenceExpression = (JetReferenceExpression) operand;
+                int index = codegen.indexOfLocal(referenceExpression);
                 if (index >= 0) {
-                    StackValue.preIncrement(index, myDelta).put(returnType, v);
-                    return returnType;
+                    DeclarationDescriptor declarationDescriptor = codegen.getBindingContext().get(REFERENCE_TARGET, referenceExpression);
+                    if (declarationDescriptor instanceof VariableDescriptor) {
+                        VariableDescriptor variableDescriptor = (VariableDescriptor) declarationDescriptor;
+                        if (KotlinBuiltIns.getInstance().isPrimitiveType(variableDescriptor.getReturnType())) {
+                            StackValue.preIncrement(index, myDelta).put(returnType, v);
+                            return returnType;
+                        }
+                    }
                 }
             }
             StackValue value = codegen.genQualified(receiver, operand);

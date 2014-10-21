@@ -6,7 +6,7 @@ fun box(): String {
     l[0]++
     ++l[0]
     x++
-    ++x
+    ++y
     if (l[0] != 3) return "Fail: ${l[0]}"
     if (x != 2) return "Fail x: $x"
     if (y != 2) return "Fail y: $y"
